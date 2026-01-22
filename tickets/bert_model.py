@@ -1,29 +1,28 @@
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 
-# Load tokenizer and model (pretrained)
-tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-model = BertForSequenceClassification.from_pretrained(
-    "bert-base-uncased",
-    num_labels=4
-)
+MODEL_NAME = "distilbert-base-uncased"
 
-# Labels for prediction
-LABELS = ["Network", "Software", "Hardware", "Access"]
+_tokenizer = None
+_model = None
+
+def load_model():
+    global _tokenizer, _model
+    if _tokenizer is None:
+        _tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+        _model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+    return _tokenizer, _model
+
 
 def predict_category(text):
-    inputs = tokenizer(
-        text,
-        return_tensors="pt",
-        truncation=True,
-        padding=True,
-        max_length=128
-    )
+    tokenizer, model = load_model()
 
-    with torch.no_grad():
-        outputs = model(**inputs)
+    inputs = tokenizer(text, return_tensors="pt", truncation=True)
+    outputs = model(**inputs)
 
-    probabilities = torch.softmax(outputs.logits, dim=1)
-    confidence, predicted_class = torch.max(probabilities, dim=1)
+    probs = torch.nn.functional.softmax(outputs.logits, dim=1)
+    confidence, predicted = torch.max(probs, dim=1)
 
-    return LABELS[predicted_class.item()], confidence.item()
+    categories = ["Network", "Software", "Hardware", "Access"]
+    return categories[predicted.item()], confidence.item()
+
