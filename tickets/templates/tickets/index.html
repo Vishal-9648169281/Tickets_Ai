@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IT Ticket System</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tickets/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h2>AI-Based IT Support Ticket System</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="description" rows="5"
+            placeholder="Describe your IT issue here..."></textarea>
+
+        <button type="submit">Submit Ticket</button>
+    </form>
+   {% if result %}
+    <hr>
+    <h3>Prediction Result</h3>
+    <p><b>Category:</b> {{ result.category }}</p>
+    <p><b>Confidence:</b> {{ result.confidence }}</p>
+{% endif %}
+
+</div>
+
+</body>
+</html>
+

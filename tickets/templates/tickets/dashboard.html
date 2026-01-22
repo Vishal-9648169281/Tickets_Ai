@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Support Team Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'tickets/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+    <h2>Support Team Dashboard</h2>
+
+    <table border="1" width="100%" cellpadding="8">
+        <tr>
+            <th>Ticket Description</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Assigned Team</th>
+            <th>Created At</th>
+        </tr>
+
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.description }}</td>
+            <td>{{ ticket.category }}</td>
+            <td>{{ ticket.priority }}</td>
+            <td>{{ ticket.assigned_team }}</td>
+            <td>{{ ticket.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No tickets found</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>
