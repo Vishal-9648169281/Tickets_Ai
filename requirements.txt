@@ -1,4 +1,5 @@
 Django>=4.2
 transformers
-torch==2.1.0
+torch==2.5.1
 gunicorn
+
